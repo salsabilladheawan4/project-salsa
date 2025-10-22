@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AsetController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WargaController;
 use App\Http\Controllers\InventarisController;
 
@@ -14,18 +15,21 @@ Route::get('/', function () {
 Route::get('/home', [InventarisController::class, 'index']);
 
 // Route untuk auth
-Route::get('/auth/login', [AuthController::class, 'index'])->name('auth.login.form');
-Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
-Route::get('/auth/register', [AuthController::class, 'registerForm'])->name('auth.register.form');
-Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');
+Route::get('login', [AuthController::class, 'showLoginForm'])->name('auth.login');
+Route::post('login', [AuthController::class, 'login']);
+Route::get('register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
+Route::post('register', [AuthController::class, 'register']);
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 // Route untuk dashboard admin
 Route::get('/dashboard', [InventarisController::class, 'index'])->name('dashboard');
 
 Route::get('/', function () {
-    return redirect('/auth/login');
+    return redirect()->route('auth.login');
 });
 
 Route::resource('aset', AsetController::class);
 
 Route::resource('warga', WargaController::class);
+
+Route::resource('user', UserController::class);

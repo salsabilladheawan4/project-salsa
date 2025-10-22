@@ -2,74 +2,84 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function index()
+    public function showLoginForm()
     {
-        return view('auth.login-form');
+        return view('auth.login');
     }
 
-    public function registerForm()
+    public function showRegisterForm()
     {
-        return view('auth.register-form');
+        return view('auth.register');
     }
 
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required',
-            'password' => 'required'
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        $username = $request->username;
-        $password = $request->password;
+        $user = User::where('email', $request->email)->first();
 
-        // Cek jika username = nim dan password = nim
-        if ($username === 'nim' && $password === 'nim') {
-            return redirect('/dashboard')->with('success', 'Selamat Datang Admin!');
+        // 3. Cek password menggunakan Hash::check
+        if ($user && Hash::check($request->password, $user->password)) {
+
+            // Loginkan user
+            Auth::login($user);
+            $request->session()->regenerate();
+
+            // 4. Tampilkan halaman Dashboard
+            return redirect()->route('dashboard')->with('success', 'Selamat Datang, ' . $user->name . '!');
         }
 
-        // Untuk demo, jika bukan admin maka tampilkan pesan error
-        return redirect()->back()->withErrors([
-            'login' => 'Username atau password salah!'
-        ])->withInput();
+        // 5. Jika tidak sama, kembali ke login dengan error
+        return back()->withErrors([
+            'email' => 'Email atau Password yang Anda masukkan salah.',
+        ])->onlyInput('email');
     }
 
     public function register(Request $request)
     {
         $request->validate([
-            'nama' => 'required|regex:/^[a-zA-Z\s]+$/',
-            'alamat' => 'required|max:300',
-            'tanggal_lahir' => 'required|date',
-            'username' => 'required',
-            'password' => 'required|min:6|regex:/^(?=.*[A-Z])(?=.*\d)/',
-            'confirm_password' => 'required|same:password'
+            'nama' => 'required|max:100',
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => 'required|min:8|confirmed',
         ], [
-            'nama.required' => 'Nama harus diisi',
-            'nama.regex' => 'Nama tidak boleh mengandung angka',
-            'alamat.required' => 'Alamat harus diisi',
-            'alamat.max' => 'Alamat maksimal 300 karakter',
-            'tanggal_lahir.required' => 'Tanggal lahir harus diisi',
-            'tanggal_lahir.date' => 'Format tanggal lahir tidak valid',
-            'password.required' => 'Password harus diisi',
-            'password.min' => 'Password minimal 6 karakter',
-            'password.regex' => 'Password harus mengandung huruf kapital dan angka',
-            'confirm_password.required' => 'Konfirmasi password harus diisi',
-            'confirm_password.same' => 'Password dan konfirmasi password tidak sama'
+            'nama.required' => 'Nama tidak boleh kosong',
+            'email.required' => 'Email tidak boleh kosong',
+            'email.email' => 'Email tidak valid',
+            'email.unique' => 'Email sudah terdaftar',
+            'password.required' => 'Password tidak boleh kosong',
+            'password.min' => 'Password minimal 8 karakter',
+            'password.confirmed' => 'Konfirmasi password tidak cocok',
         ]);
 
-        // Jika validasi berhasil, redirect ke login dengan pesan sukses
-        return redirect()->route('auth.login.form')->with('success', 'Registrasi berhasil! Silakan Login');
+        $data['name']     = $request->nama;
+        $data['email']    = $request->email;
+        $data['password'] = Hash::make($request->password);
+
+        User::create($data);
+
+        // 3. Redirect ke login dengan pesan sukses
+        return redirect()->route('auth.login')->with('success', 'Registrasi berhasil! Silakan Login');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function logout(Request $request)
     {
-        //
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('auth.login');
     }
 
     /**
