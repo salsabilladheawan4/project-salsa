@@ -26,6 +26,12 @@
                         <span>Daftar Aset</span>
                     </a>
                 </li>
+                <li class="sidebar-item {{ request()->routeIs('warga.*') ? 'active' : '' }}">
+                    <a href="{{ route('warga.index') }}" class='sidebar-link'>
+                        <i class="bi bi-people"></i>
+                        <span>Daftar Warga</span>
+                    </a>
+                </li>
 
                 <li class="sidebar-title">Akun</li>
                 <li class="sidebar-item">

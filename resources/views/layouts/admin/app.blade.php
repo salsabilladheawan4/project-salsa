@@ -9,7 +9,7 @@
         <div id="main">
             @include('layouts.admin.header')
 
-            @yield('content') {{-- Konten halaman (dashboard/aset) akan masuk di sini --}}
+            @yield('content')
 
             @include('layouts.admin.footer')
         </div>
@@ -17,3 +17,4 @@
     @include('layouts.admin.js')
 </body>
 </html>
+
