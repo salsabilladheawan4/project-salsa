@@ -13,7 +13,7 @@
         </div>
         <div class="sidebar-menu">
             <ul class="menu">
-                <li class="sidebar-title">Menu</li>
+                <li class="sidebar-title"><b>Menu</b></li>
                 <li class="sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                     <a href="{{ route('dashboard') }}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
@@ -33,7 +33,7 @@
                     </a>
                 </li>
 
-                <li class="sidebar-title">Akun</li>
+                <li class="sidebar-title"><b>Akun</b></li>
                 <li class="sidebar-item">
                     <a href="#" class='sidebar-link'
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

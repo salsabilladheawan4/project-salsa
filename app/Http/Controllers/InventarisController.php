@@ -41,7 +41,7 @@ class InventarisController extends Controller
         // Kirim array ke view.
         // Laravel akan secara otomatis mengubah key array ('total_aset', dll.)
         // menjadi variabel ($total_aset, dll.) di dalam view.
-        return view('dashboard.dashboard', $dataInventaris);
+        return view('pages.dashboard.dashboard', $dataInventaris);
     }
 
     /**

@@ -10,12 +10,12 @@ class WargaController extends Controller
     public function index()
     {
         $wargas = Warga::latest()->paginate(10);
-        return view('warga.index', compact('wargas'));
+        return view('pages.warga.index', compact('wargas'));
     }
 
     public function create()
     {
-        return view('warga.create');
+        return view('pages.warga.create');
     }
 
     public function store(Request $request)
@@ -39,12 +39,12 @@ class WargaController extends Controller
 
     public function show(Warga $warga)
     {
-        return view('warga.show', compact('warga'));
+        return view('pages.warga.show', compact('warga'));
     }
 
     public function edit(Warga $warga)
     {
-        return view('warga.edit', compact('warga'));
+        return view('pages.warga.edit', compact('warga'));
     }
 
     public function update(Request $request, Warga $warga)

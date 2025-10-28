@@ -13,7 +13,7 @@ class AsetController extends Controller
     public function index()
     {
         $asets = Aset::latest()->get();
-        return view('aset.index', compact('asets'));
+        return view('pages.aset.index', compact('asets'));
     }
 
     /**
@@ -21,7 +21,7 @@ class AsetController extends Controller
      */
     public function create()
     {
-        return view('aset.create');
+        return view('pages.aset.create');
     }
 
     /**
@@ -59,7 +59,7 @@ class AsetController extends Controller
      */
     public function edit(Aset $aset)
     {
-        return view('aset.edit', compact('aset'));
+        return view('pages.aset.edit', compact('aset'));
     }
 
     /**
