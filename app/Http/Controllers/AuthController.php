@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showLoginForm()
+    public function index()
     {
-        return view('pages.auth.login');
+        return view('pages.auth.login-form');
     }
 
     public function showRegisterForm()
@@ -28,18 +28,13 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // 3. Cek password menggunakan Hash::check
         if ($user && Hash::check($request->password, $user->password)) {
-
-            // Loginkan user
             Auth::login($user);
             $request->session()->regenerate();
 
-            // 4. Tampilkan halaman Dashboard
             return redirect()->route('dashboard')->with('success', 'Selamat Datang, ' . $user->name . '!');
         }
 
-        // 5. Jika tidak sama, kembali ke login dengan error
         return back()->withErrors([
             'email' => 'Email atau Password yang Anda masukkan salah.',
         ])->onlyInput('email');
@@ -67,13 +62,9 @@ class AuthController extends Controller
 
         User::create($data);
 
-        // 3. Redirect ke login dengan pesan sukses
         return redirect()->route('auth.login')->with('success', 'Registrasi berhasil! Silakan Login');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -82,25 +73,16 @@ class AuthController extends Controller
         return redirect()->route('auth.login');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
