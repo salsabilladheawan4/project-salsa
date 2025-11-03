@@ -1,142 +1,52 @@
-<!doctype html>
-<html lang="en">
-
+<!DOCTYPE html>
+<html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    @include('layouts.admin.css')
+    <style>
+        .sidebar-wrapper .logo img {
+            height: 55px !important;
+            width: auto !important;
+        }
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25D366; /* Warna hijau WhatsApp */
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 30px; /* Ukuran icon */
+            line-height: 60px; /* Pusatkan icon secara vertikal */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: 0.3s;
+        }
 
-  <title>@yield('title', 'Dashboard') - Sistem Manajemen</title>
-
-  <link rel="shortcut icon" type="image/png" href="{{ asset('assets-admin/images/logos/favicon.png') }}" />
-  <link rel="stylesheet" href="{{ asset('assets-admin/css/styles.min.css') }}" />
-
-  @stack('css')
+        .whatsapp-float:hover {
+            background-color: #128C7E; /* Warna hijau lebih gelap */
+            color: #FFF;
+        }
+    </style>
 </head>
-
 <body>
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
+    <div id="app">
+        @include('layouts.admin.sidebar')
+        <div id="main">
+            @include('layouts.admin.header')
 
-    <aside class="left-sidebar">
-      <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="{{ route('dashboard') }}" class="text-nowrap logo-img">
-            <img src="{{ asset('assets-admin/images/logos/dark-logo.svg') }}" width="180" alt="" />
-          </a>
-          <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-            <i class="ti ti-x fs-8"></i>
-          </div>
+            @yield('content')
+
+            @include('layouts.admin.footer')
         </div>
-
-        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-          <ul id="sidebarnav">
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">Home</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-layout-dashboard"></i>
-                </span>
-                <span class="hide-menu">Dashboard</span>
-              </a>
-            </li>
-
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">Master Data</span>
-            </li>
-             <li class="sidebar-item">
-              <a class="sidebar-link {{ request()->routeIs('aset.*') ? 'active' : '' }}" href="{{ route('aset.index') }}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-box"></i>
-                </span>
-                <span class="hide-menu">Aset</span>
-              </a>
-            </li>
-             <li class="sidebar-item">
-              <a class="sidebar-link {{ request()->routeIs('warga.*') ? 'active' : '' }}" href="{{ route('warga.index') }}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-users"></i>
-                </span>
-                <span class="hide-menu">Warga</span>
-              </a>
-            </li>
-             <li class="sidebar-item">
-              <a class="sidebar-link {{ request()->routeIs('user.*') ? 'active' : '' }}" href="{{ route('user.index') }}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-user-circle"></i>
-                </span>
-                <span class="hide-menu">User</span>
-              </a>
-            </li>
-
-          </ul>
-        </nav>
-        </div>
-      </aside>
-    <div class="body-wrapper">
-      <header class="app-header">
-        <nav class="navbar navbar-expand-lg navbar-light">
-          <ul class="navbar-nav">
-            <li class="nav-item d-block d-xl-none">
-              <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
-                <i class="ti ti-menu-2"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                <i class="ti ti-bell-ringing"></i>
-                <div class="notification bg-primary rounded-circle"></div>
-              </a>
-            </li>
-          </ul>
-          <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <li class="nav-item dropdown">
-                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  <img src="{{ asset('assets-admin/images/profile/user-1.jpg') }}" alt="" width="35" height="35" class="rounded-circle">
-                </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                  <div class="message-body">
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-user fs-6"></i>
-                      <p class="mb-0 fs-3">{{ Auth::user()->name ?? 'My Profile' }}</p>
-                    </a>
-
-                    <form action="{{ route('logout') }}" method="POST" class="mx-3 mt-2 d-block">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-primary w-100">Logout</button>
-                    </form>
-
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </header>
-      <div class="container-fluid">
-
-        @yield('content')
-
-        <div class="py-6 px-6 text-center">
-          <p class="mb-0 fs-4">Design and Developed by <a href="https://adminmart.com/" target="_blank" class="pe-1 text-primary text-decoration-underline">AdminMart.com</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a></p>
-        </div>
-      </div>
-
     </div>
-  </div>
-
-  <script src="{{ asset('assets-admin/libs/jquery/dist/jquery.min.js') }}"></script>
-  <script src="{{ asset('assets-admin/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('assets-admin/js/sidebarmenu.js') }}"></script>
-  <script src="{{ asset('assets-admin/js/app.min.js') }}"></script>
-  <script src="{{ asset('assets-admin/libs/simplebar/dist/simplebar.js') }}"></script>
-
-  @stack('scripts-bottom')
+    @include('layouts.admin.js')
+    <a href="https://wa.me/628982124281?text=Halo%20Admin,%20saya%20mau%20bertanya..."
+       class="whatsapp-float"
+       target="_blank">
+        <i class="bi bi-whatsapp"></i>
+    </a>
 </body>
-
 </html>
+
